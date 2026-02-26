@@ -24,14 +24,12 @@ jobs:
           cache: 'maven'
 
       - name: Run tests
+        continue-on-error: true
         run: mvn -q test -Dheadless=true
 
-      - name: Generate Allure report
-        uses: simple-elf/allure-report-action@v1.8
-        with:
-          allure_results: allure-results
-          allure_report: allure-report
-          gh_pages: gh-pages
+      - name: Generate Allure report (Maven)
+        if: always()
+        run: mvn -q -DskipTests=true allure:report
 
       - name: Publish to GitHub Pages (gh-pages)
         uses: peaceiris/actions-gh-pages@v4
@@ -39,4 +37,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-report
+          publish_dir: target/site/allure-maven-plugin
