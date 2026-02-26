@@ -1,0 +1,101 @@
+# Travel Policy UI Automation Template (Java + Selenium 4 + TestNG)
+
+A production-style template repo for UI automation:
+- **Java 22 + Maven**
+- **Selenium 4**
+- **TestNG**
+- **WebDriverManager**
+- **Allure reporting**
+- **GitHub Actions CI** (runs tests + publishes Allure report to **GitHub Pages**)
+
+> Target site (default): https://digital.harel-group.co.il/travel-policy
+
+---
+
+## Quick start
+
+### Prerequisites
+- Java 22+
+- Maven 3.9+
+- Google Chrome installed
+
+### Run locally (headed)
+```bash
+mvn test
+```
+
+### Run locally (headless)
+```bash
+mvn test -Dheadless=true
+```
+
+### Override base URL
+```bash
+mvn test -DbaseUrl=https://digital.harel-group.co.il/travel-policy
+```
+
+### Generate & view Allure report locally
+1) Run tests:
+```bash
+mvn test
+```
+
+2) Generate report:
+```bash
+mvn -DskipTests=true allure:report
+```
+
+3) Open the report (from `target/site/allure-maven-plugin/`):
+- Open `index.html` in a browser
+
+---
+
+## Project structure
+
+```
+src/test/java
+  config/      - runtime configuration (url/headless/timeouts)
+  driver/      - driver lifecycle + ThreadLocal
+  pages/       - Page Objects (UI interactions only)
+  flows/       - business flows (scenario steps)
+  tests/       - TestNG tests (assertions + orchestration)
+  utils/       - waits, date utils, common helpers
+src/test/resources
+  testng.xml   - TestNG suite
+  logback.xml  - logging
+docs/          - step-by-step documentation
+.github/       - CI workflow
+```
+
+---
+
+## CI + Cloud report hosting
+
+This repo includes a GitHub Actions workflow that:
+1. Runs the tests on every push/PR
+2. Generates an Allure report
+3. Publishes it to GitHub Pages
+
+### Enable GitHub Pages
+1. Go to **Settings → Pages**
+2. Source: **Deploy from a branch**
+3. Branch: `gh-pages` / root
+
+After the first CI run, you'll get a public report URL.
+
+---
+
+## Notes about selectors
+
+The page objects use a **selector strategy** with TODO markers:
+- Prefer stable attributes (e.g. `data-testid`, `aria-label`)
+- Fallback to text-based XPath for Hebrew UI
+- Avoid brittle full XPaths
+
+Update selectors in:
+- `src/test/java/pages/*`
+
+---
+
+## License
+MIT

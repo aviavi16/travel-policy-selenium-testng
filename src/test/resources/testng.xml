@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Travel Policy UI Suite" parallel="false">
+  <test name="UI Tests - Chrome">
+    <classes>
+      <class name="tests.PurchaseTravelPolicyTest"/>
+    </classes>
+  </test>
+</suite>
