@@ -29,16 +29,30 @@ jobs:
 
       - name: Generate Allure report
         if: always()
+        shell: bash
         run: |
           mvn -q -DskipTests=true allure:report
-          mkdir -p target/allure-report
-          cp -r target/site/allure-maven-plugin/* target/allure-report/
 
-      - name: Rename Allure entry file to index.html
-        if: always()
-        run: |
-          cp target/allure-report/allure-maven.html \
-             target/allure-report/index.html
+          mkdir -p target/allure-report
+
+          if [ -d "target/site/allure-maven-plugin" ] && [ "$(ls -A target/site/allure-maven-plugin)" ]; then
+            cp -r target/site/allure-maven-plugin/* target/allure-report/
+          else
+            echo "Allure output folder is empty or missing."
+          fi
+
+          if [ -f "target/allure-report/allure-maven.html" ] && [ ! -f "target/allure-report/index.html" ]; then
+            cp target/allure-report/allure-maven.html target/allure-report/index.html
+          fi
+
+          if [ ! -f "target/allure-report/index.html" ]; then
+            cat > target/allure-report/index.html <<'HTML'
+            <html><body><h1>No Allure report generated</h1><p>Check the workflow logs for test/report errors.</p></body></html>
+            HTML
+          fi
+
+          echo "Publish directory content:"
+          ls -la target/allure-report
 
       - name: Publish to GitHub Pages (gh-pages)
         uses: peaceiris/actions-gh-pages@v4
