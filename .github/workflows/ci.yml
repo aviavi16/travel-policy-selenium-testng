@@ -31,6 +31,12 @@ jobs:
         if: always()
         run: mvn -q -DskipTests=true allure:report
 
+      - name: Rename Allure entry file to index.html
+        if: always()
+        run: |
+          cp target/site/allure-maven-plugin/allure-maven.html \
+             target/site/allure-maven-plugin/index.html
+
       - name: Publish to GitHub Pages (gh-pages)
         uses: peaceiris/actions-gh-pages@v4
         if: always()
