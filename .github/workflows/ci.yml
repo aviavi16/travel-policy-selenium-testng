@@ -31,6 +31,13 @@ jobs:
         if: always()
         shell: bash
         run: |
+          # Allure TestNG writes results to ./allure-results by default,
+          # while allure-maven expects target/allure-results.
+          if [ -d "allure-results" ] && [ "$(ls -A allure-results)" ]; then
+            mkdir -p target/allure-results
+            cp -r allure-results/* target/allure-results/
+          fi
+
           mvn -q -DskipTests=true allure:report
 
           mkdir -p target/allure-report
