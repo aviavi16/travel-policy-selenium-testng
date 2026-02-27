@@ -16,24 +16,30 @@ public final class Waiter {
     }
 
     public WebElement visible(By locator) {
+        Guards.failIfSessionTimedOut("before waiting for visibility");
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public WebElement clickable(By locator) {
+        Guards.failIfSessionTimedOut("before waiting for clickability");
         return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     public void click(By locator) {
+        Guards.failIfSessionTimedOut("before click");
         WebElement element = clickable(locator);
         scrollIntoView(element);
         element.click();
+        Guards.failIfSessionTimedOut("after click");
     }
 
     public void type(By locator, String text) {
+        Guards.failIfSessionTimedOut("before type");
         WebElement element = visible(locator);
         scrollIntoView(element);
         element.clear();
         element.sendKeys(text);
+        Guards.failIfSessionTimedOut("after type");
     }
 
     public boolean isPresent(By locator) {
