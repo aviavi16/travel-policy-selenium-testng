@@ -47,12 +47,35 @@ jobs:
         if: always()
         shell: bash
         run: |
-          if [ -d "gh-pages-history/history" ] && [ "$(ls -A gh-pages-history/history)" ]; then
-            mkdir -p target/allure-results/history
-            cp -r gh-pages-history/history/* target/allure-results/history/
+          # Restore previous history/trends from gh-pages into new run results.
+          mkdir -p target/allure-results/history
+          if [ -d "gh-pages-history/allure-history/history" ] && [ "$(ls -A gh-pages-history/allure-history/history)" ]; then
+            cp -r gh-pages-history/allure-history/history/* target/allure-results/history/ || true
+          elif [ -d "gh-pages-history/history" ] && [ "$(ls -A gh-pages-history/history)" ]; then
+            cp -r gh-pages-history/history/* target/allure-results/history/ || true
           fi
 
+          echo "Restored history files:"
+          ls -la target/allure-results/history || true
+
           mvn -q -DskipTests=true allure:report
+
+          REPORT_HISTORY=""
+          if [ -d "target/site/allure-maven-plugin/history" ]; then
+            REPORT_HISTORY="target/site/allure-maven-plugin/history"
+          elif [ -d "target/allure-report/history" ]; then
+            REPORT_HISTORY="target/allure-report/history"
+          fi
+
+          mkdir -p gh-pages-history/allure-history/history
+          if [ -n "$REPORT_HISTORY" ]; then
+            cp -r "$REPORT_HISTORY"/* gh-pages-history/allure-history/history/ || true
+          fi
+
+          echo "Generated report history:"
+          ls -la target/site/allure-maven-plugin/history || true
+          echo "Pages history folder:"
+          ls -la gh-pages-history/allure-history/history || true
 
           mkdir -p target/allure-report
 
@@ -70,6 +93,14 @@ jobs:
             printf '%s\n' '<html><body><h1>No Allure report generated</h1><p>Check the workflow logs for test/report errors.</p></body></html>' > target/allure-report/index.html
           fi
 
+          # Ensure published site contains history path and compatibility copy.
+          if [ -d "gh-pages-history/allure-history/history" ] && [ "$(ls -A gh-pages-history/allure-history/history)" ]; then
+            mkdir -p target/allure-report/allure-history/history
+            cp -r gh-pages-history/allure-history/history/* target/allure-report/allure-history/history/ || true
+            mkdir -p target/allure-report/history
+            cp -r gh-pages-history/allure-history/history/* target/allure-report/history/ || true
+          fi
+
           echo "Publish directory content:"
           ls -la target/allure-report
 
@@ -79,4 +110,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: target/allure-report
+          publish_dir: gh-pages-history
