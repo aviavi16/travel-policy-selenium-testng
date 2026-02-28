@@ -1,1 +1,1 @@
-[{"uid":"a98de1b382985085","name":"Purchase flow: continent -> dates (dynamic) -> passengers page","time":{"start":1772303714781,"stop":1772303726771,"duration":11990},"status":"passed","severity":"normal"}]
+[{"uid":"fe7b6c1464c2dace","name":"Purchase flow: continent -> dates (dynamic) -> passengers page","time":{"start":1772303929468,"stop":1772303943723,"duration":14255},"status":"passed","severity":"normal"}]
