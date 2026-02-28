@@ -1,2 +1,2 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Sat Feb 28 18:54:58 UTC 2026","Sat Feb 28 18:55:13 UTC 2026","15491","Travel Policy UI Suite","UI Tests - Chrome","tests.PurchaseTravelPolicyTest","tests.PurchaseTravelPolicyTest","purchaseFlow_showsTotalDays_andOpensPassengersPage","Purchase flow: continent -> dates (dynamic) -> passengers page",""
+"passed","Sat Feb 28 19:04:38 UTC 2026","Sat Feb 28 19:04:55 UTC 2026","16638","Travel Policy UI Suite","UI Tests - Chrome","tests.PurchaseTravelPolicyTest","tests.PurchaseTravelPolicyTest","purchaseFlow_showsTotalDays_andOpensPassengersPage","Purchase flow: continent -> dates (dynamic) -> passengers page",""
