@@ -33,19 +33,14 @@ jobs:
         continue-on-error: true
         env:
           DEBUG_FLOW: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_flow || 'false' }}
-        run: mvn -q test -Dheadless=true -DdebugFlow=${DEBUG_FLOW}
+        run: |
+          rm -rf allure-results target/allure-results target/allure-report target/site/allure-maven-plugin
+          mvn -q test -Dheadless=true -DdebugFlow=${DEBUG_FLOW} -Dallure.results.directory=target/allure-results
 
       - name: Generate Allure report
         if: always()
         shell: bash
         run: |
-          # Allure TestNG writes results to ./allure-results by default,
-          # while allure-maven expects target/allure-results.
-          if [ -d "allure-results" ] && [ "$(ls -A allure-results)" ]; then
-            mkdir -p target/allure-results
-            cp -r allure-results/* target/allure-results/
-          fi
-
           mvn -q -DskipTests=true allure:report
 
           mkdir -p target/allure-report
