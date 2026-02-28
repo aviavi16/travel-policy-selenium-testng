@@ -96,7 +96,7 @@ This repo includes a GitHub Actions workflow that:
 
 ### Which workflow to check
 - **Run Tests (PR Signal)**
-  - Purpose: fast cloud test signal (pass/fail) on push/PR
+  - Purpose: fast cloud test signal (pass/fail) on PRs and non-main pushes
   - Where to see logs: **Actions → Run Tests (PR Signal) → test → Run tests**
 
 - **Publish Test Report (Allure → Pages)**
