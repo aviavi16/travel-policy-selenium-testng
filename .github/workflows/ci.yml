@@ -1,9 +1,8 @@
-name: UI Tests (Selenium + TestNG) + Allure Pages
+name: Publish Test Report (Allure → Pages)
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
   workflow_dispatch:
     inputs:
       debug_flow:
@@ -22,6 +21,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout gh-pages history (for Allure trends)
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages-history
+        continue-on-error: true
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -30,7 +37,6 @@ jobs:
           cache: 'maven'
 
       - name: Run tests
-        continue-on-error: true
         env:
           DEBUG_FLOW: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_flow || 'false' }}
         run: |
@@ -41,6 +47,11 @@ jobs:
         if: always()
         shell: bash
         run: |
+          if [ -d "gh-pages-history/history" ] && [ "$(ls -A gh-pages-history/history)" ]; then
+            mkdir -p target/allure-results/history
+            cp -r gh-pages-history/history/* target/allure-results/history/
+          fi
+
           mvn -q -DskipTests=true allure:report
 
           mkdir -p target/allure-report

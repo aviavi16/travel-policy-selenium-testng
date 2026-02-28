@@ -94,6 +94,19 @@ This repo includes a GitHub Actions workflow that:
 2. Generates an Allure report
 3. Publishes it to GitHub Pages
 
+### Which workflow to check
+- **Run Tests (PR Signal)**
+  - Purpose: fast cloud test signal (pass/fail) on push/PR
+  - Where to see logs: **Actions → Run Tests (PR Signal) → test → Run tests**
+
+- **Publish Test Report (Allure → Pages)**
+  - Purpose: run tests on `main`, generate/publish Allure HTML to Pages
+  - Trigger: push to `main` or manual `workflow_dispatch`
+  - Optional manual input: `debug_flow=true` to enable `[FLOW]` / `[DATES]` logs
+
+Latest report URL:
+- `https://aviavi16.github.io/travel-policy-selenium-testng/#`
+
 ### Enable GitHub Pages
 1. Go to **Settings → Pages**
 2. Source: **Deploy from a branch**

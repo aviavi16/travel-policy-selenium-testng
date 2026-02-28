@@ -1,0 +1,37 @@
+name: Run Tests (PR Signal)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '22'
+          cache: 'maven'
+
+      - name: Run tests
+        run: mvn -q test -Dheadless=true -Dallure.results.directory=target/allure-results
+
+      - name: Upload test artifacts (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            target/surefire-reports/**
+            target/allure-results/**
+            allure-results/**
+            target/**/*.png
