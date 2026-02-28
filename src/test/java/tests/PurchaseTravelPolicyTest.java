@@ -17,13 +17,19 @@ public class PurchaseTravelPolicyTest extends BaseTest {
 
         PurchaseFlow flow = new PurchaseFlow();
 
-        flow.openAndReachDatesStep();
+        Allure.step("Purchase flow", () -> {
+            Allure.step("Open and navigate to dates step", flow::openAndReachDatesStep);
 
-        String totalDaysText = flow.chooseDatesAndReadTotalDays(departure, ret);
-        Allure.addAttachment("Total days text", "text/plain", totalDaysText == null ? "" : totalDaysText);
-        Assert.assertTrue(totalDaysText != null && !totalDaysText.isBlank(),
-                "Total days text should be visible (non-empty) on Dates step.");
+            Allure.step("Choose dates and read total days", () -> {
+                String totalDaysText = flow.chooseDatesAndReadTotalDays(departure, ret);
+                Allure.addAttachment("Total days text", "text/plain", totalDaysText == null ? "" : totalDaysText);
+                Assert.assertTrue(totalDaysText != null && !totalDaysText.isBlank(),
+                        "Total days text should be visible (non-empty) on Dates step.");
+            });
 
-        Assert.assertTrue(flow.continueToPassengersAndVerifyOpened(), "Passengers page should be opened.");
+            Allure.step("Continue to passengers and verify page", () ->
+                    Assert.assertTrue(flow.continueToPassengersAndVerifyOpened(),
+                            "Passengers page should be opened."));
+        });
     }
 }
