@@ -4,6 +4,12 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      debug_flow:
+        description: "Enable flow debug logs (-DdebugFlow=true)"
+        required: false
+        default: "false"
 
 permissions:
   contents: write
@@ -25,7 +31,9 @@ jobs:
 
       - name: Run tests
         continue-on-error: true
-        run: mvn -q test -Dheadless=true
+        env:
+          DEBUG_FLOW: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_flow || 'false' }}
+        run: mvn -q test -Dheadless=true -DdebugFlow=${DEBUG_FLOW}
 
       - name: Generate Allure report
         if: always()

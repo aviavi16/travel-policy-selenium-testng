@@ -34,7 +34,13 @@ Headless:
 .\run-tests.ps1 test -Dheadless=true
 ```
 
+Debug flow logs (local, only when needed):
+```powershell
+.\run-tests.ps1 test -Dheadless=true -DdebugFlow=true
+```
+
 > This clears `JAVA_TOOL_OPTIONS` only for this run process (does not change machine/global settings).
+> Flow debug logs are disabled by default and enabled only with `-DdebugFlow=true`.
 
 ### Run locally (headless)
 ```bash
