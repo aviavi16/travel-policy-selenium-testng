@@ -61,9 +61,7 @@ jobs:
           fi
 
           if [ ! -f "target/allure-report/index.html" ]; then
-            cat > target/allure-report/index.html <<'HTML'
-            <html><body><h1>No Allure report generated</h1><p>Check the workflow logs for test/report errors.</p></body></html>
-            HTML
+            printf '%s\n' '<html><body><h1>No Allure report generated</h1><p>Check the workflow logs for test/report errors.</p></body></html>' > target/allure-report/index.html
           fi
 
           echo "Publish directory content:"
