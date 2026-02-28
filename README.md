@@ -24,6 +24,18 @@ A production-style template repo for UI automation:
 mvn test
 ```
 
+### Team-friendly Windows run (neutralize global `JAVA_TOOL_OPTIONS` noise)
+```powershell
+.\run-tests.ps1
+```
+
+Headless:
+```powershell
+.\run-tests.ps1 test -Dheadless=true
+```
+
+> This clears `JAVA_TOOL_OPTIONS` only for this run process (does not change machine/global settings).
+
 ### Run locally (headless)
 ```bash
 mvn test -Dheadless=true

@@ -30,6 +30,15 @@ public class PurchaseFlow {
         datesPage.clickNextToPassengers();
     }
 
+    public void chooseDates(LocalDate departure, LocalDate ret) {
+        datesPage.setDepartureDate(departure);
+        datesPage.setReturnDate(ret);
+    }
+
+    public void continueFromDatesToPassengers() {
+        datesPage.clickNextToPassengers();
+    }
+
     public String getTotalDaysText() {
         return datesPage.getTotalDaysText();
     }

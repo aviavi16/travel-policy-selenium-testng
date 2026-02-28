@@ -4,7 +4,11 @@ public final class TestConfig {
     private TestConfig() {}
 
     public static String baseUrl() {
-        return System.getProperty("baseUrl", "https://digital.harel-group.co.il/travel-policy");
+        String value = System.getProperty("baseUrl");
+        if (value == null || value.isBlank()) {
+            return "https://digital.harel-group.co.il/travel-policy";
+        }
+        return value;
     }
 
     public static boolean headless() {
