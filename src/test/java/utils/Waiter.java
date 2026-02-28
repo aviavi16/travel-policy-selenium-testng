@@ -27,9 +27,27 @@ public final class Waiter {
 
     public void click(By locator) {
         Guards.failIfSessionTimedOut("before click");
-        WebElement element = clickable(locator);
-        scrollIntoView(element);
-        element.click();
+
+        wait.until(driver -> {
+            try {
+                WebElement element = driver.findElement(locator);
+                scrollIntoView(element);
+
+                if (!element.isDisplayed() || !element.isEnabled()) {
+                    return false;
+                }
+
+                if (!isTopMostAtCenter(element)) {
+                    return false;
+                }
+
+                element.click();
+                return true;
+            } catch (NoSuchElementException | StaleElementReferenceException | ElementClickInterceptedException e) {
+                return false;
+            }
+        });
+
         Guards.failIfSessionTimedOut("after click");
     }
 
@@ -55,6 +73,27 @@ public final class Waiter {
         try {
             ((JavascriptExecutor) DriverManager.getDriver()).executeScript("arguments[0].scrollIntoView({block:'center', inline:'nearest'});", el);
         } catch (Exception ignored) {
+        }
+    }
+
+    private boolean isTopMostAtCenter(WebElement element) {
+        try {
+            Object result = ((JavascriptExecutor) DriverManager.getDriver()).executeScript(
+                    "const el = arguments[0];"
+                            + "const r = el.getBoundingClientRect();"
+                            + "if (r.width <= 0 || r.height <= 0) return false;"
+                            + "const x = Math.floor(r.left + r.width / 2);"
+                            + "const y = Math.floor(r.top + r.height / 2);"
+                            + "const vw = window.innerWidth || document.documentElement.clientWidth;"
+                            + "const vh = window.innerHeight || document.documentElement.clientHeight;"
+                            + "if (x < 0 || y < 0 || x >= vw || y >= vh) return false;"
+                            + "const top = document.elementFromPoint(x, y);"
+                            + "return !!top && (top === el || el.contains(top));",
+                    element
+            );
+            return Boolean.TRUE.equals(result);
+        } catch (Exception ex) {
+            return false;
         }
     }
 }
