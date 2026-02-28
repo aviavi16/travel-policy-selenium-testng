@@ -2,6 +2,7 @@ package flows;
 
 import config.TestConfig;
 import driver.DriverManager;
+import io.qameta.allure.Step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.ContinentPage;
@@ -26,6 +27,7 @@ public class PurchaseFlow {
         }
     }
 
+    @Step("Open travel policy page and click first-time purchase")
     public void startPurchase() {
         debug("[FLOW] startPurchase: opening landing page");
         landingPage.open();
@@ -34,6 +36,7 @@ public class PurchaseFlow {
         debug("[FLOW] after first-time purchase click url={}", DriverManager.getDriver().getCurrentUrl());
     }
 
+    @Step("Select continent and continue to dates step")
     public void chooseContinentAndContinue() {
         debug("[FLOW] chooseContinentAndContinue: selecting continent");
         continentPage.selectRandomContinent();
@@ -42,12 +45,19 @@ public class PurchaseFlow {
         debug("[FLOW] after next-to-dates url={}", DriverManager.getDriver().getCurrentUrl());
     }
 
+    @Step("Purchase flow: open and navigate to dates step")
+    public void openAndReachDatesStep() {
+        startPurchase();
+        chooseContinentAndContinue();
+    }
+
     public void chooseDatesAndContinue(LocalDate departure, LocalDate ret) {
         datesPage.setDepartureDate(departure);
         datesPage.setReturnDate(ret);
         datesPage.clickNextToPassengers();
     }
 
+    @Step("Choose departure and return dates")
     public void chooseDates(LocalDate departure, LocalDate ret) {
         debug("[FLOW] chooseDates: departure={}, return={}", departure, ret);
         datesPage.setDepartureDate(departure);
@@ -55,17 +65,32 @@ public class PurchaseFlow {
         debug("[FLOW] dates selected url={}", DriverManager.getDriver().getCurrentUrl());
     }
 
+    @Step("Continue from dates step to passengers step")
     public void continueFromDatesToPassengers() {
         debug("[FLOW] continueFromDatesToPassengers: clicking next button");
         datesPage.clickNextToPassengers();
         debug("[FLOW] after next-to-passengers url={}", DriverManager.getDriver().getCurrentUrl());
     }
 
+    @Step("Read total days text")
     public String getTotalDaysText() {
         return datesPage.getTotalDaysText();
     }
 
+    @Step("Purchase flow: choose dates and read total days")
+    public String chooseDatesAndReadTotalDays(LocalDate departure, LocalDate ret) {
+        chooseDates(departure, ret);
+        return getTotalDaysText();
+    }
+
+    @Step("Verify passengers page is opened")
     public boolean isPassengersPageOpened() {
         return passengersPage.isOpened();
+    }
+
+    @Step("Purchase flow: continue to passengers and verify page")
+    public boolean continueToPassengersAndVerifyOpened() {
+        continueFromDatesToPassengers();
+        return isPassengersPageOpened();
     }
 }

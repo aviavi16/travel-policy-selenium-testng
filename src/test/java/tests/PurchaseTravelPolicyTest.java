@@ -1,6 +1,7 @@
 package tests;
 
 import flows.PurchaseFlow;
+import io.qameta.allure.Allure;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.DateUtils;
@@ -16,19 +17,13 @@ public class PurchaseTravelPolicyTest extends BaseTest {
 
         PurchaseFlow flow = new PurchaseFlow();
 
-        flow.startPurchase();
-        flow.chooseContinentAndContinue();
+        flow.openAndReachDatesStep();
 
-        // Choose dates first, assert total-days on the Dates step,
-        // then move to passengers page.
-        flow.chooseDates(departure, ret);
-
-        String totalDaysText = flow.getTotalDaysText();
+        String totalDaysText = flow.chooseDatesAndReadTotalDays(departure, ret);
+        Allure.addAttachment("Total days text", "text/plain", totalDaysText == null ? "" : totalDaysText);
         Assert.assertTrue(totalDaysText != null && !totalDaysText.isBlank(),
                 "Total days text should be visible (non-empty) on Dates step.");
 
-        flow.continueFromDatesToPassengers();
-
-        Assert.assertTrue(flow.isPassengersPageOpened(), "Passengers page should be opened.");
+        Assert.assertTrue(flow.continueToPassengersAndVerifyOpened(), "Passengers page should be opened.");
     }
 }
